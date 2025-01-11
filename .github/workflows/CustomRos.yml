@@ -29,20 +29,10 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-
+    
     - name: Get latest version
       id: get_latest
       run: |
-        jobs:
-  check_version:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: [x86, arm, arm64, mipsbe, mmips, smips, tile, ppc]
-    steps:
-      - name: Get latest version
-        id: get_latest
-        run: |
           echo $(uname -a)
           LATEST_VERSION="7.8"
           echo "Latest Version: $LATEST_VERSION"
