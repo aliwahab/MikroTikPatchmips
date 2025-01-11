@@ -1,4 +1,4 @@
-name: Patch Mikrotik RouterOS
+name: Patch Mikrotik Custom Version RouterOS
 
 on:
   workflow_dispatch:
