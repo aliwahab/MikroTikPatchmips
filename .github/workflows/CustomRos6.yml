@@ -1,4 +1,4 @@
-name: Patch v6
+name: Patch Custom Version RouterOS V6
 
 on:
   workflow_dispatch:
