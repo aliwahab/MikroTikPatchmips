@@ -332,7 +332,7 @@ jobs:
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add latest7.txt
-        git commit -m "Update latest version"
+        git commit --allow-empty -m "Update latest version"
         git push
 
     - name: Create Release tag ${{ env.LATEST_VERSION }}
