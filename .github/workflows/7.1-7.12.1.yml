@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch: [x86, arm, arm64, mipsbe, mmips, smips, ppc]
+        arch: [x86]
 
     steps:
     - name: Checkout
@@ -89,8 +89,6 @@ jobs:
         sudo rsync -a iso/ new_iso/
         sudo umount iso/
         sudo rm -rf iso/
-        mv /new_iso/routeros-$VERSION.npk
-        python3 patch.py npk routeros-$VERSION.npk
         NPK_FILES=$(find new_iso/*.npk)
         for file in $NPK_FILES; do
           sudo -E python3 patch.py npk $file
