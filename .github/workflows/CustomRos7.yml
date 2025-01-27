@@ -340,6 +340,7 @@ jobs:
       run: |
         sudo mkdir -p ./publish/$LATEST_VERSION
         sudo cp CHANGELOG ./publish/$LATEST_VERSION/
+        ls -l
         sudo cp *.zip *.iso *.npk *.tar.gz ./publish/$LATEST_VERSION/
         sudo chown -R root:root ./publish/
         sudo apt-get install -y lftp ssh sshpass > /dev/null 2>&1
