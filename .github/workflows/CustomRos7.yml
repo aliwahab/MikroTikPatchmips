@@ -324,7 +324,21 @@ jobs:
         sudo zip ../all_packages$ARCH-$LATEST_VERSION-patched.zip *.npk
         cd ..
         sudo rm -rf all_packages$ARCH-$LATEST_VERSION/
-
+        
+    - name: Upload Files
+      if: steps.get_latest.outputs.has_new_version == 'true'
+      run: |
+        sudo mkdir -p ./publish/$LATEST_VERSION
+        sudo cp CHANGELOG ./publish/$LATEST_VERSION/
+        sudo cp ./all_packages/*.npk ./publish/$LATEST_VERSION/
+        sudo chown -R root:root ./publish/
+        sudo apt-get install -y lftp ssh sshpass > /dev/null 2>&1
+        sudo -E lftp -u ${{ secrets.SSH_USERNAME }},'${{ secrets.SSH_PASSWORD }}' sftp://${{ secrets.SSH_SERVER }}:${{ secrets.SSH_PORT }} <<EOF
+        set sftp:auto-confirm yes
+        mirror --reverse --verbose --only-newer ./publish ${{ secrets.SSH_DIRECTORY }}
+        bye
+        EOF
+        
     - name: Update latest version
       if: steps.get_latest.outputs.has_new_version == 'true' && matrix.arch == 'x86'
       run: |
