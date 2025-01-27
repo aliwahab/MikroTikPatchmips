@@ -297,12 +297,12 @@ def patch_squashfs(path, key_dict):
                 url_dict = {
                     os.environ['MIKRO_UPGRADE_URL'].encode():os.environ['CUSTOM_UPGRADE_URL'].encode(),
                 }
-                data = open(file,'rb').read()
-                for old_url,new_url in url_dict.items():
+                data = open(file, 'rb').read()
+                for old_url, new_url in url_dict.items():
                     if old_url in data:
                         print(f'{file} url patched {old_url.decode()[:7]}...')
-                        data = data.replace(old_url,new_url)
-                        open(file,'wb').write(data)        
+                        data = data.replace(old_url, new_url)
+                        open(file, 'wb').write(data)        
 
 
 def run_shell_command(command):
