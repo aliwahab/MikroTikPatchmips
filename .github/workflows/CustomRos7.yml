@@ -331,7 +331,7 @@ jobs:
         echo $NEWEST > latest7.txt
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add Ros-$LATEST_VERSION.txt
+        git add latest7.txt
         git commit -m "Update latest version"
         git push
 
