@@ -47,7 +47,7 @@ jobs:
         cat CHANGELOG
         echo "LATEST_VERSION=${LATEST_VERSION}" >> $GITHUB_ENV
         if [ "${{ matrix.arch }}" == "x86" ]; then
-          ARCH=''
+          ARCH='x86'
         elif [ "${{ matrix.arch }}" == "arm" ]; then
           ARCH='-arm'
         elif [ "${{ matrix.arch }}" == "arm64" ]; then
