@@ -13,6 +13,8 @@ env:
   CUSTOM_NPK_SIGN_PUBLIC_KEY: ${{ secrets.CUSTOM_NPK_SIGN_PUBLIC_KEY }}
   CUSTOM_LICENSE_PRIVATE_KEY: ${{ secrets.CUSTOM_LICENSE_PRIVATE_KEY }}
   CUSTOM_LICENSE_PUBLIC_KEY: ${{ secrets.CUSTOM_LICENSE_PUBLIC_KEY }}
+  MIKRO_UPGRADE_URL: ${{ secrets.MIKRO_UPGRADE_URL }}
+  CUSTOM_UPGRADE_URL: ${{ secrets.CUSTOM_UPGRADE_URL }}
 
 jobs:
   patch:
@@ -40,7 +42,7 @@ jobs:
       id: get_latest
       run: |
         echo $(uname -a)
-        LATEST_VERSION=7.1.3
+        LATEST_VERSION=7.16.2
         echo Latest Version: $LATEST_VERSION
         echo "has_new_version=true" >> $GITHUB_OUTPUT
         curl -s -o CHANGELOG https://upgrade.mikrotik.com/routeros/$LATEST_VERSION/CHANGELOG
