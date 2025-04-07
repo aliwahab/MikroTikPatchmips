@@ -50,7 +50,7 @@ jobs:
       id: get_latest
       run: |
         echo $(uname -a)
-        LATEST_VERSION=7.17.2
+        LATEST_VERSION=7.12.1
         echo Latest Version: $LATEST_VERSION
         echo "has_new_version=true" >> $GITHUB_OUTPUT
         curl -s -o CHANGELOG https://upgrade.mikrotik.com/routeros/$LATEST_VERSION/CHANGELOG
