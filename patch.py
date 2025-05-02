@@ -283,41 +283,20 @@ def patch_kernel(data: bytes, key_dict):
         raise Exception('unknown kernel format')
 
 
-def patch_squashfs(path,key_dict):
+def patch_squashfs(path, key_dict):
     for root, dirs, files in os.walk(path):
         for file in files:
             if file =='loader':
                 continue
-            file = os.path.join(root,file)
+            file = os.path.join(root, file)
             if os.path.isfile(file):
-                data = open(file,'rb').read()
-                for old_public_key,new_public_key in key_dict.items():
-                    _data = replace_key(old_public_key,new_public_key,data,file)
-                    if _data != data:
-                        open(file,'wb').write(_data)
-                url_dict = {
-                    os.environ['MIKRO_LICENCE_URL'].encode():os.environ['CUSTOM_LICENCE_URL'].encode(),
-                    os.environ['MIKRO_UPGRADE_URL'].encode():os.environ['CUSTOM_UPGRADE_URL'].encode(),
-                    os.environ['MIKRO_CLOUD_URL'].encode():os.environ['CUSTOM_CLOUD_URL'].encode(),
-                    os.environ['MIKRO_CLOUD_PUBLIC_KEY'].encode():os.environ['CUSTOM_CLOUD_PUBLIC_KEY'].encode(),
-                }
-                data = open(file,'rb').read()
-                for old_url,new_url in url_dict.items():
-                    if old_url in data:
-                        print(f'{file} url patched {old_url.decode()[:7]}...')
-                        data = data.replace(old_url,new_url)
-                        open(file,'wb').write(data)
-                        
-                if os.path.split(file)[1] == 'licupgr':
-                    url_dict = {
-                        os.environ['MIKRO_RENEW_URL'].encode():os.environ['CUSTOM_RENEW_URL'].encode(),
-                    }
-                    for old_url,new_url in url_dict.items():
-                        if old_url in data:
-                            print(f'{file} url patched {old_url.decode()[:7]}...')
-                            data = data.replace(old_url,new_url)
-                            open(file,'wb').write(data)        
-                        
+                data = open(file, 'rb').read()
+                for old_public_key, new_public_key in key_dict.items():
+                    if old_public_key in data:
+                        print(f'{file} public key patched {old_public_key[:16].hex().upper()}...')
+                        data = data.replace(old_public_key, new_public_key)
+                        open(file, 'wb').write(data)
+
 
 def run_shell_command(command):
     process = subprocess.run(
