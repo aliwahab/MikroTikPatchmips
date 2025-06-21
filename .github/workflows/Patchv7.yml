@@ -28,9 +28,6 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-    - name: Install Python dependencies
-      run: |
-        pip install pefile
 
     - name: Get latest version
       id: get_latest
