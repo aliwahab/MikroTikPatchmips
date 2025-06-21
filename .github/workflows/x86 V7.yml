@@ -1,7 +1,12 @@
 name: Patch x86 V7
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
+    inputs:
+      custom_version:
+        description: "Masukkan versi RouterOS (misalnya: 7.18.2), atau biarkan kosong untuk versi terbaru"
+        required: false
+        default: ""
 
 permissions:
   contents: write
