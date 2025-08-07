@@ -34,7 +34,7 @@ jobs:
           sudo apt-get install -y unzip wget
 
       - name: Run patch script
-         sudo apt-get install -y mkisofs xorriso qemu-utils extlinux --no-install-recommends
+        run: sudo apt-get install -y mkisofs xorriso qemu-utils extlinux --no-install-recommends
          
       - name: Patch Netinstall
         run: |
