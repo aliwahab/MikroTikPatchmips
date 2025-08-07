@@ -40,12 +40,12 @@ jobs:
          
       - name: Patch Netinstall
         run: |
-          wget https://download.mikrotik.com/routeros/$VERSION/netinstall-$VERSION.zip
-          unzip netinstall-$VERSION.zip
+          wget https://download.mikrotik.com/routeros/6.47.9/netinstall-6.47.9.zip
+          unzip netinstall-6.47.9.zip
           python3 -E patch.py netinstall netinstall.exe
-          zip netinstall-$VERSION-patched.zip netinstall.exe
-          sha256sum netinstall-$VERSION-patched.zip > netinstall-$VERSION-patched.sha256
-          rm netinstall-$VERSION.zip netinstall.exe LICENSE.txt
+          zip netinstall-6.47.9-patched.zip netinstall.exe
+          sha256sum netinstall-6.47.9-patched.zip > netinstall-6.47.9-patched.sha256
+          rm netinstall-6.47.9.zip netinstall.exe LICENSE.txt
 
       - name: Patch RouterOS main package
         run: |
