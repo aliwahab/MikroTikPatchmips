@@ -12,8 +12,7 @@ jobs:
   patch:
     runs-on: ubuntu-latest
     env:
-      VERSION :6.49.17
-      env:
+        VERSION :6.49.17
         CUSTOM_LICENSE_PRIVATE_KEY: ${{ secrets.CUSTOM_LICENSE_PRIVATE_KEY }}
         CUSTOM_LICENSE_PUBLIC_KEY: ${{ secrets.CUSTOM_LICENSE_PUBLIC_KEY }}
         CUSTOM_NPK_SIGN_PRIVATE_KEY: ${{ secrets.CUSTOM_NPK_SIGN_PRIVATE_KEY }}
