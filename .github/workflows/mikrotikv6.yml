@@ -25,9 +25,15 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+         python-version: '3.x'
       - name: Install dependencies
-        run: sudo apt-get install -y unzip wget python3 sha256sum
-
+        run: |
+         sudo apt-get update
+         sudo apt-get install -y mkisofs xorriso qemu-utils extlinux --no-install-recommends
+         
       - name: Patch Netinstall
         run: |
           wget https://download.mikrotik.com/routeros/$VERSION/netinstall-$VERSION.zip
@@ -39,9 +45,9 @@ jobs:
 
       - name: Patch RouterOS main package
         run: |
-          wget https://download.mikrotik.com/routeros/$VERSION/routeros-$VERSION-mipsbe.npk
-          python3 patch.py npk routeros-$VERSION-mipsbe.npk
-          mv routeros-$VERSION-mipsbe.npk routeros-$VERSION-mipsbe-patched.npk
+          wget https://download.mikrotik.com/routeros/$VERSION/routeros--mipsbe-$VERSION.npk
+          python3 patch.py npk routeros--mipsbe-$VERSION.npk
+          mv routeros--mipsbe-$VERSION.npk routeros-$VERSION-mipsbe-patched.npk
           sha256sum routeros-$VERSION-mipsbe-patched.npk > routeros-$VERSION-mipsbe-patched.sha256
 
       - name: Patch all packages
