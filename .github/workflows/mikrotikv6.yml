@@ -1,4 +1,4 @@
-name: MikroTik Patch
+name: MikroTikmipsbe Patch
 
 on:
   workflow_dispatch:
@@ -38,15 +38,6 @@ jobs:
       - name: Run patch script
         run: sudo apt-get install -y mkisofs xorriso qemu-utils extlinux --no-install-recommends
          
-      - name: Patch Netinstall
-        run: |
-          wget https://download.mikrotik.com/routeros/6.47.9/netinstall-6.47.9.zip
-          unzip netinstall-6.47.9.zip
-          python3 -E patch.py netinstall netinstall.exe
-          zip netinstall-6.47.9-patched.zip netinstall.exe
-          sha256sum netinstall-6.47.9-patched.zip > netinstall-6.47.9-patched.sha256
-          rm netinstall-6.47.9.zip netinstall.exe LICENSE.txt
-
       - name: Patch RouterOS main package
         run: |
           wget https://download.mikrotik.com/routeros/$VERSION/routeros-mipsbe-$VERSION.npk
@@ -69,26 +60,13 @@ jobs:
           cd ../
           rm -rf ./all_packages-mipsbe
 
-      - name: Upload patched Netinstall
-        uses: actions/upload-artifact@v4
-        with:
-          name: netinstall-patched
-          path: |
-            netinstall-${{ env.VERSION }}-patched.zip
-            netinstall-${{ env.VERSION }}-patched.sha256
-
       - name: Upload patched RouterOS
         uses: actions/upload-artifact@v4
         with:
           name: routeros-patched
           path: |
             routeros-${{ env.VERSION }}-mipsbe-patched.npk
-            routeros-${{ env.VERSION }}-mipsbe-patched.sha256
-
-      - name: Upload patched packages
-        uses: actions/upload-artifact@v4
-        with:
-          name: all-packages-patched
-          path: |
             all_packages-mipsbe-${{ env.VERSION }}-patched.zip
-            all_packages-mipsbe-${{ env.VERSION }}-patched.sha256
+     
+
+           
