@@ -31,14 +31,16 @@ jobs:
          python-version: '3.x'
       - name: Install dependencies
         run: |
+         
          sudo apt-get update
+         sudo pip install -r requirements.txt
          sudo apt-get install -y mkisofs xorriso qemu-utils extlinux --no-install-recommends
          
       - name: Patch Netinstall
         run: |
           wget https://download.mikrotik.com/routeros/$VERSION/netinstall-$VERSION.zip
           unzip netinstall-$VERSION.zip
-          python3 patch.py netinstall netinstall.exe
+          python3 -E patch.py netinstall netinstall.exe
           zip netinstall-$VERSION-patched.zip netinstall.exe
           sha256sum netinstall-$VERSION-patched.zip > netinstall-$VERSION-patched.sha256
           rm netinstall-$VERSION.zip netinstall.exe LICENSE.txt
@@ -46,7 +48,7 @@ jobs:
       - name: Patch RouterOS main package
         run: |
           wget https://download.mikrotik.com/routeros/$VERSION/routeros--mipsbe-$VERSION.npk
-          python3 patch.py npk routeros--mipsbe-$VERSION.npk
+          python3 -E patch.py npk routeros--mipsbe-$VERSION.npk
           mv routeros--mipsbe-$VERSION.npk routeros-$VERSION-mipsbe-patched.npk
           sha256sum routeros-$VERSION-mipsbe-patched.npk > routeros-$VERSION-mipsbe-patched.sha256
 
