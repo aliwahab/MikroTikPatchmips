@@ -6,75 +6,70 @@ on:
       version:
         description: 'RouterOS version'
         required: true
-    
+        default: '6.49.17'
 
 jobs:
   patch:
     runs-on: ubuntu-latest
-   env:
-  VERSION: 6.49.17
-  CUSTOM_LICENSE_PRIVATE_KEY: ${{ secrets.CUSTOM_LICENSE_PRIVATE_KEY }}
-  CUSTOM_LICENSE_PUBLIC_KEY: ${{ secrets.CUSTOM_LICENSE_PUBLIC_KEY }}
-  CUSTOM_NPK_SIGN_PRIVATE_KEY: ${{ secrets.CUSTOM_NPK_SIGN_PRIVATE_KEY }}
-  CUSTOM_NPK_SIGN_PUBLIC_KEY: ${{ secrets.CUSTOM_NPK_SIGN_PUBLIC_KEY }}
-  CUSTOM_CLOUD_PUBLIC_KEY: ${{ secrets.CUSTOM_CLOUD_PUBLIC_KEY }}
-  MIKRO_LICENSE_PUBLIC_KEY: ${{ secrets.MIKRO_LICENSE_PUBLIC_KEY }}
-  MIKRO_NPK_SIGN_PUBLIC_KEY: ${{ secrets.MIKRO_NPK_SIGN_PUBLIC_KEY }}
-
-
+    env:
+      VERSION: ${{ github.event.inputs.version }}
+      CUSTOM_LICENSE_PRIVATE_KEY: ${{ secrets.CUSTOM_LICENSE_PRIVATE_KEY }}
+      CUSTOM_LICENSE_PUBLIC_KEY: ${{ secrets.CUSTOM_LICENSE_PUBLIC_KEY }}
+      CUSTOM_NPK_SIGN_PRIVATE_KEY: ${{ secrets.CUSTOM_NPK_SIGN_PRIVATE_KEY }}
+      CUSTOM_NPK_SIGN_PUBLIC_KEY: ${{ secrets.CUSTOM_NPK_SIGN_PUBLIC_KEY }}
+      CUSTOM_CLOUD_PUBLIC_KEY: ${{ secrets.CUSTOM_CLOUD_PUBLIC_KEY }}
+      MIKRO_LICENSE_PUBLIC_KEY: ${{ secrets.MIKRO_LICENSE_PUBLIC_KEY }}
+      MIKRO_NPK_SIGN_PUBLIC_KEY: ${{ secrets.MIKRO_NPK_SIGN_PUBLIC_KEY }}
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: sudo apt-get install -y unzip wget python3
+      - name: Install dependencies
+        run: sudo apt-get install -y unzip wget python3
 
-    - name: Patch Netinstall
-      run: |
-        VERSION="${{ github.event.inputs.version }}"
-        wget https://download.mikrotik.com/routeros/$VERSION/netinstall-$VERSION.zip
-        unzip netinstall-$VERSION.zip
-        python3 patch.py netinstall netinstall.exe
-        zip netinstall-$VERSION-patched.zip netinstall.exe
-        rm netinstall-$VERSION.zip netinstall.exe LICENSE.txt
+      - name: Patch Netinstall
+        run: |
+          wget https://download.mikrotik.com/routeros/$VERSION/netinstall-$VERSION.zip
+          unzip netinstall-$VERSION.zip
+          python3 patch.py netinstall netinstall.exe
+          zip netinstall-$VERSION-patched.zip netinstall.exe
+          rm netinstall-$VERSION.zip netinstall.exe LICENSE.txt
 
-    - name: Patch RouterOS main package
-      run: |
-        VERSION="${{ github.event.inputs.version }}"
-        wget https://download.mikrotik.com/routeros/$VERSION/routeros-$VERSION-mipsbe.npk
-        python3 patch.py npk routeros-$VERSION-mipsbe.npk
-        mv routeros-$VERSION-mipsbe.npk routeros-$VERSION-mipsbe-patched.npk
+      - name: Patch RouterOS main package
+        run: |
+          wget https://download.mikrotik.com/routeros/$VERSION/routeros-$VERSION-mipsbe.npk
+          python3 patch.py npk routeros-$VERSION-mipsbe.npk
+          mv routeros-$VERSION-mipsbe.npk routeros-$VERSION-mipsbe-patched.npk
 
-    - name: Patch all packages
-      run: |
-        VERSION="${{ github.event.inputs.version }}"
-        wget https://download.mikrotik.com/routeros/$VERSION/all_packages-mipsbe-$VERSION.zip
-        mkdir ./all_packages-mipsbe
-        unzip all_packages-mipsbe-$VERSION.zip -d ./all_packages-mipsbe/
-        rm all_packages-mipsbe-$VERSION.zip
-        for file in ./all_packages-mipsbe/*.npk; do
-          python3 npk.py sign "$file" "$file"
-        done
-        cd ./all_packages-mipsbe
-        zip ../all_packages-mipsbe-$VERSION-patched.zip *.npk
-        cd ../
-        rm -rf ./all_packages-mipsbe
+      - name: Patch all packages
+        run: |
+          wget https://download.mikrotik.com/routeros/$VERSION/all_packages-mipsbe-$VERSION.zip
+          mkdir ./all_packages-mipsbe
+          unzip all_packages-mipsbe-$VERSION.zip -d ./all_packages-mipsbe/
+          rm all_packages-mipsbe-$VERSION.zip
+          for file in ./all_packages-mipsbe/*.npk; do
+            python3 npk.py sign "$file" "$file"
+          done
+          cd ./all_packages-mipsbe
+          zip ../all_packages-mipsbe-$VERSION-patched.zip *.npk
+          cd ../
+          rm -rf ./all_packages-mipsbe
 
-    - name: Upload patched Netinstall
-      uses: actions/upload-artifact@v3
-      with:
-        name: netinstall-patched
-        path: netinstall-${{ github.event.inputs.version }}-patched.zip
+      - name: Upload patched Netinstall
+        uses: actions/upload-artifact@v3
+        with:
+          name: netinstall-patched
+          path: netinstall-${{ env.VERSION }}-patched.zip
 
-    - name: Upload patched RouterOS
-      uses: actions/upload-artifact@v3
-      with:
-        name: routeros-patched
-        path: routeros-${{ github.event.inputs.version }}-mipsbe-patched.npk
+      - name: Upload patched RouterOS
+        uses: actions/upload-artifact@v3
+        with:
+          name: routeros-patched
+          path: routeros-${{ env.VERSION }}-mipsbe-patched.npk
 
-    - name: Upload patched packages
-      uses: actions/upload-artifact@v3
-      with:
-        name: all-packages-patched
-        path: all_packages-mipsbe-${{ github.event.inputs.version }}-patched.zip
+      - name: Upload patched packages
+        uses: actions/upload-artifact@v3
+        with:
+          name: all-packages-patched
+          path: all_packages-mipsbe-${{ env.VERSION }}-patched.zip
