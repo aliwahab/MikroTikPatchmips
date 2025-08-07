@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install dependencies
-        run: sudo apt-get install -y unzip wget python3
+        run: sudo apt-get install -y unzip wget python3 sha256sum
 
       - name: Patch Netinstall
         run: |
@@ -34,6 +34,7 @@ jobs:
           unzip netinstall-$VERSION.zip
           python3 patch.py netinstall netinstall.exe
           zip netinstall-$VERSION-patched.zip netinstall.exe
+          sha256sum netinstall-$VERSION-patched.zip > netinstall-$VERSION-patched.sha256
           rm netinstall-$VERSION.zip netinstall.exe LICENSE.txt
 
       - name: Patch RouterOS main package
@@ -41,6 +42,7 @@ jobs:
           wget https://download.mikrotik.com/routeros/$VERSION/routeros-$VERSION-mipsbe.npk
           python3 patch.py npk routeros-$VERSION-mipsbe.npk
           mv routeros-$VERSION-mipsbe.npk routeros-$VERSION-mipsbe-patched.npk
+          sha256sum routeros-$VERSION-mipsbe-patched.npk > routeros-$VERSION-mipsbe-patched.sha256
 
       - name: Patch all packages
         run: |
@@ -53,23 +55,30 @@ jobs:
           done
           cd ./all_packages-mipsbe
           zip ../all_packages-mipsbe-$VERSION-patched.zip *.npk
+          sha256sum ../all_packages-mipsbe-$VERSION-patched.zip > ../all_packages-mipsbe-$VERSION-patched.sha256
           cd ../
           rm -rf ./all_packages-mipsbe
 
       - name: Upload patched Netinstall
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: netinstall-patched
-          path: netinstall-${{ env.VERSION }}-patched.zip
+          path: |
+            netinstall-${{ env.VERSION }}-patched.zip
+            netinstall-${{ env.VERSION }}-patched.sha256
 
       - name: Upload patched RouterOS
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: routeros-patched
-          path: routeros-${{ env.VERSION }}-mipsbe-patched.npk
+          path: |
+            routeros-${{ env.VERSION }}-mipsbe-patched.npk
+            routeros-${{ env.VERSION }}-mipsbe-patched.sha256
 
       - name: Upload patched packages
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: all-packages-patched
-          path: all_packages-mipsbe-${{ env.VERSION }}-patched.zip
+          path: |
+            all_packages-mipsbe-${{ env.VERSION }}-patched.zip
+            all_packages-mipsbe-${{ env.VERSION }}-patched.sha256
