@@ -1,50 +1,5 @@
-Skip to content
-Navigation Menu
-aliwahab
-MikroTikPatchmips
 
-Type / to search
-Code
-Pull requests
-Actions
-Projects
-Security
-Insights
-Settings
-Files
-Go to file
-t
-.github/workflows
-7.1-7.12.1.yml
-CustomRos6.yml
-CustomRos7.yml
-Patchv6.yml
-Patchv7.yml
-mikrotikv6.yml
-netinstallv.yml
-x86 V7.yml
-toyecc
-.gitignore
-README.md
-latest.txt
-latest6.txt
-latest7.txt
-license.py
-mikro.py
-npk.py
-package.py
-patch.py
-requirements.txt
-sha256.py
-MikroTikPatchmips/.github/workflows
-/mikrotikv6.yml
- 
-
-Code
-
-Blame
-72 lines (60 loc) · 2.55 KB
-name: MikroTikmipsbe Patch
+name: MikroTikmipsbev7Patch
 
 on:
   workflow_dispatch:
@@ -52,7 +7,7 @@ on:
       version:
         description: 'RouterOS version'
         required: true
-        default: '6.49.17'
+        default: '7.16.2'
 
 jobs:
   patch:
@@ -111,16 +66,3 @@ jobs:
             routeros-${{ env.VERSION }}-mipsbe-patched.npk
             all_packages-mipsbe-${{ env.VERSION }}-patched.zip
      
-
-           
-Footer
-© 2025 GitHub, Inc.
-Footer navigation
-Terms
-Privacy
-Security
-Status
-Docs
-Contact
-Manage cookies
-Do not share my personal information
