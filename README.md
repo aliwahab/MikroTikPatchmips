@@ -1,8 +1,8 @@
 # Notice
 
-## The patch is currently tested and working for:
+## The patch is currently testing for:
 - **X86 (ROS & CHR working)**
-- **MIPSBE (working)**
+- **MIPSBE (testing)**
 - **ARM64 (CHR working)**
 - ARM (tested, bootloop)
 - MMIPS (not tested yet)
